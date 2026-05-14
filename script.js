@@ -14,25 +14,37 @@ window.onload = function() {
 // VARIABEL KAMERA
 let html5QrcodeScanner;
 
-// BUKA KAMERA
+// BUKA KAMERA DENGAN SETTINGAN TURBO UNTUK BARCODE BATANG
 function openCamera() {
-  // Tampilkan kotak modal
   document.getElementById('camera-modal').style.display = 'flex';
   
-  // Jika scanner belum dibuat, inisialisasi sekarang
   if (!html5QrcodeScanner) {
     html5QrcodeScanner = new Html5QrcodeScanner(
       "qr-reader", 
       { 
-        fps: 20, 
-        qrbox: {width: 250, height: 150}, // Ukuran kotak scan
-        supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA] 
+        fps: 30, // Ditingkatkan dari 10 ke 30 biar lebih responsif
+        qrbox: { width: 300, height: 100 }, // Bentuk dibikin pipih memanjang (Rectangle)
+        supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
+        // Fokuskan hanya pada format Barcode kemasan/logistik, abaikan QR dll
+        formatsToSupport: [
+          Html5QrcodeSupportedFormats.EAN_13,
+          Html5QrcodeSupportedFormats.EAN_8,
+          Html5QrcodeSupportedFormats.CODE_128,
+          Html5QrcodeSupportedFormats.CODE_39,
+          Html5QrcodeSupportedFormats.UPC_A,
+          Html5QrcodeSupportedFormats.UPC_E
+        ],
+        // Paksa pakai kamera belakang & resolusi HD jika memungkinkan
+        videoConstraints: {
+          facingMode: "environment",
+          width: { min: 640, ideal: 1280, max: 1920 },
+          height: { min: 480, ideal: 720, max: 1080 }
+        }
       }, 
       false
     );
   }
   
-  // Jalankan kamera
   html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 }
 
