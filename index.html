@@ -321,13 +321,63 @@
     }
 
     // Fungsi Request Update yang baru
-    function requestUpdate() {
+    async function requestUpdate() {
       const barcode = document.getElementById('barcode').value;
-      if(barcode) {
-        // Disini lu bisa ganti alert dengan fetch() lain ke GAS kalau mau data dikirim ke sheet "Request"
-        alert("Request penambahan master data untuk Barcode: " + barcode + " telah dikirim ke Admin!");
-      } else {
-        alert("Tidak ada barcode yang discan.");
+      const expDate = document.getElementById('expDate').value;
+      const qty = document.getElementById('qty').value;
+      const checkedBy = document.getElementById('checkedBy').value;
+
+      // Tetap validasi data lain agar tidak kosong
+      if(!barcode || !qty || !checkedBy || !expDate) {
+        alert("Barcode, Tanggal Exp, QTY, dan Checked By tetap wajib diisi untuk Request!");
+        return;
+      }
+
+      const btn = document.getElementById('btnRequest');
+      btn.innerText = "MENGIRIM REQUEST...";
+      btn.disabled = true;
+
+      // Payload disiapkan, perhatikan bagian SKU sengaja dikirim string kosong ""
+      const payload = {
+        barcode: barcode,
+        sku: "", 
+        expDate: expDate,
+        qty: qty,
+        checkedBy: checkedBy
+      };
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8', 
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        
+        if(result.status === "success") {
+          alert("Berhasil! Data masuk ke Sheet dan menunggu update SKU dari Admin.");
+          // Bersihkan form
+          document.getElementById('barcode').value = '';
+          document.getElementById('sku').value = '';
+          document.getElementById('expDate').value = '';
+          document.getElementById('qty').value = '';
+          document.getElementById('barcode').focus();
+          
+          // Kembalikan tampilan ke tombol Simpan
+          document.getElementById('btnSimpan').style.display = "block";
+          btn.style.display = "none";
+        } else {
+          alert("Gagal mengirim request: " + result.message);
+        }
+      } catch (error) {
+        alert("Terjadi kesalahan koneksi.");
+        console.error(error);
+      } finally {
+        btn.innerText = "REQUEST UPDATE DATA";
+        btn.disabled = false;
       }
     }
   </script>
