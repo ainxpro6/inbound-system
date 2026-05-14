@@ -1,0 +1,223 @@
+/* style.css - Tema Elegan & Modern */
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f7f6; 
+  color: #333333;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+  margin: 0;
+  min-height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 420px;
+  background-color: #ffffff;
+  padding: 35px 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); 
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  box-sizing: border-box;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+label {
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  color: #1e293b;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  background-color: #ffffff;
+  border: 1.5px solid #cbd5e1; 
+  border-radius: 10px;
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+input:focus {
+  border-color: #3b82f6; 
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); 
+}
+
+.barcode-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.barcode-group input {
+  flex: 1;
+  font-size: 1.1rem; 
+  letter-spacing: 1px;
+}
+
+.camera-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #64748b;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.camera-btn:hover {
+  transform: scale(1.1);
+  color: #3b82f6;
+}
+
+.row-2 {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+}
+
+.row-2 .form-group {
+  flex: 1;
+}
+
+.readonly-input {
+  background-color: #f8fafc;
+  border-color: #e2e8f0;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+.readonly-input:focus {
+  border-color: #e2e8f0;
+  box-shadow: none;
+}
+
+button.action-btn {
+  width: 100%;
+  padding: 15px;
+  background-color: #10b981; 
+  border: none;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  margin-top: 5px;
+  box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+}
+
+button.action-btn:hover {
+  background-color: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 8px rgba(16, 185, 129, 0.3);
+}
+
+button.action-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+button.action-btn:disabled {
+  background-color: #cbd5e1;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+button.request-btn {
+  background-color: #475569; 
+  box-shadow: 0 4px 6px rgba(71, 85, 105, 0.2);
+}
+
+button.request-btn:hover {
+  background-color: #334155;
+  box-shadow: 0 6px 8px rgba(71, 85, 105, 0.3);
+}
+
+button.request-btn:active {
+  box-shadow: 0 2px 4px rgba(71, 85, 105, 0.2);
+}
+
+/* --- Efek Highlight Dinamis untuk SKU --- */
+#sku {
+  font-weight: 700; /* Teks lebih tebal */
+  font-size: 1.15rem; /* Ukuran font sedikit diperbesar */
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+/* Warna saat SKU berhasil ditemukan */
+.sku-found {
+  background-color: #eff6ff !important; /* Background biru sangat muda */
+  border-color: #93c5fd !important; /* Border biru */
+  color: #1d4ed8 !important; /* Teks biru tua/tegas */
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Warna saat SKU gagal ditemukan */
+.sku-not-found {
+  background-color: #fef2f2 !important; /* Background merah sangat muda */
+  border-color: #fca5a5 !important; /* Border merah */
+  color: #b91c1c !important; /* Teks merah tua */
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1) !important;
+}
+
+/* --- Style Dropdown Cabang --- */
+select.styled-select {
+  width: 100%;
+  padding: 14px;
+  background-color: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  color: #1e293b;
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: center;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  
+  /* Menghilangkan panah bawaan browser dan mengganti dengan ikon panah custom */
+  appearance: none; 
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%2364748b" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 15px top 50%;
+}
+
+select.styled-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}
