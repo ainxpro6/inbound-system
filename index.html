@@ -117,7 +117,7 @@
     button.action-btn {
       width: 100%;
       padding: 14px;
-      background-color: #9e9e9e; /* Warna sesuai request awal */
+      background-color: #9e9e9e; 
       border: none;
       color: #ffffff;
       font-size: 1.1rem;
@@ -147,6 +147,7 @@
 
   <div class="container">
     
+    <!-- BARCODE & CAMERA -->
     <div class="form-group">
       <label>BARCODE</label>
       <div class="barcode-group">
@@ -155,13 +156,16 @@
       </div>
     </div>
 
+    <!-- SKU PRODUK -->
     <div class="form-group">
       <input type="text" id="sku" class="readonly-input" placeholder="SKU PRODUK HASIL DARI BARCODE" readonly>
     </div>
 
+    <!-- TANGGAL EXP & QTY -->
     <div class="row-2">
       <div class="form-group">
         <label>TANGGAL EXP</label>
+        <!-- Menggunakan date bawaan HTML, stabil di semua HP -->
         <input type="date" id="expDate">
       </div>
       <div class="form-group">
@@ -170,11 +174,13 @@
       </div>
     </div>
 
+    <!-- CHECKED BY -->
     <div class="form-group">
       <label>Checked by</label>
       <input type="text" id="checkedBy" placeholder="INPUT NAMA">
     </div>
 
+    <!-- BUTTONS -->
     <div style="margin-top: 15px;">
       <button class="action-btn" id="btnSimpan" onclick="simpanData()">SIMPAN</button>
     </div>
@@ -185,9 +191,12 @@
 
   </div>
 
-  // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT DI SINI
+  <script>
+    // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT DI SINI
+    // Pastikan URL ini hasil deploy terbaru setelah menambahkan fungsi doGet
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFnAt_k_cKbY0lHxyDAHnxxLHdpzCGDDTmz99BLhOa3y3B7do9XOHflh3qPjbo9z2mRQ/exec';
 
+    // Ambil data "Checked By" dari Local Storage jika ada
     window.onload = function() {
       const savedName = localStorage.getItem('inbound_checker_name');
       if(savedName) document.getElementById('checkedBy').value = savedName;
@@ -199,9 +208,9 @@
 
     // Variabel timer untuk menahan request (debounce)
     let typingTimer;
-    const doneTypingInterval = 500; // jeda 0.5 detik setelah berhenti mengetik/scan
+    const doneTypingInterval = 500; // jeda 0.5 detik
 
-    // Fungsi ini dipanggil setiap kali ada input di kolom barcode
+    // Fungsi pencarian saat input barcode berubah
     function lookupSKU(barcodeValue) {
       const skuInput = document.getElementById('sku');
       clearTimeout(typingTimer);
@@ -209,7 +218,7 @@
       if (barcodeValue.trim().length > 0) {
         skuInput.value = "Mencari SKU..."; // Indikator loading
         
-        // Memulai hitung mundur. Jika dalam 0.5 detik tidak ada ketikan baru, jalankan fetch
+        // Memulai hitung mundur untuk menembak API
         typingTimer = setTimeout(() => {
           fetchSKUFromGAS(barcodeValue.trim());
         }, doneTypingInterval);
@@ -218,11 +227,10 @@
       }
     }
 
-    // Fungsi untuk menarik data dari GAS
+    // Request pencarian data SKU ke GAS
     async function fetchSKUFromGAS(barcode) {
       const skuInput = document.getElementById('sku');
       try {
-        // Mengirim GET request ke GAS dengan parameter barcode
         const response = await fetch(`${SCRIPT_URL}?barcode=${encodeURIComponent(barcode)}`);
         const result = await response.json();
         
@@ -239,7 +247,7 @@
       }
     }
 
-    // Fungsi Submit Data
+    // Fungsi Submit Data ke GAS
     async function simpanData() {
       const barcode = document.getElementById('barcode').value;
       const sku = document.getElementById('sku').value;
@@ -247,16 +255,19 @@
       const qty = document.getElementById('qty').value;
       const checkedBy = document.getElementById('checkedBy').value;
 
-      // Validasi tambahan: jangan simpan jika SKU masih loading atau tidak ditemukan
+      // Validasi kelengkapan form
       if(!barcode || !qty || !checkedBy || !expDate) {
         alert("Barcode, Tanggal Exp, QTY, dan Checked By wajib diisi!");
         return;
       }
-      if(sku === "Mencari SKU..." || sku === "SKU TIDAK DITEMUKAN" || sku === "Gagal terhubung ke server") {
+      
+      // Mencegah simpan jika SKU masih proses atau gagal
+      if(sku === "Mencari SKU..." || sku === "SKU TIDAK DITEMUKAN" || sku === "Gagal terhubung ke server" || sku === "") {
         alert("Pastikan Barcode valid dan SKU telah ditemukan sebelum menyimpan!");
         return;
       }
 
+      // Simpan nama checker ke Local Storage
       localStorage.setItem('inbound_checker_name', checkedBy);
 
       const payload = {
@@ -283,6 +294,7 @@
         const result = await response.json();
         
         if(result.status === "success") {
+          // Bersihkan form setelah sukses simpan
           document.getElementById('barcode').value = '';
           document.getElementById('sku').value = '';
           document.getElementById('expDate').value = '';
@@ -303,5 +315,6 @@
     function requestUpdate() {
       alert("Proses sinkronisasi data ditarik ke GitHub Pages...");
     }
+  </script>
 </body>
 </html>
