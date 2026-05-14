@@ -6,23 +6,31 @@
   <title>Inbound Scanner</title>
   
   <style>
-    /* Tema Putih Clean */
+    /* Tema Elegan & Modern */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #ffffff;
+      background-color: #f4f7f6; /* Background luar abu-abu sangat soft */
       color: #333333;
       display: flex;
       justify-content: center;
-      padding: 30px 20px;
+      align-items: flex-start;
+      padding: 40px 20px;
       margin: 0;
+      min-height: 100vh;
     }
 
+    /* Kotak Form Utama (Card Effect) */
     .container {
       width: 100%;
-      max-width: 400px;
+      max-width: 420px;
+      background-color: #ffffff;
+      padding: 35px 25px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); /* Bayangan lembut */
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 22px;
+      box-sizing: border-box;
     }
 
     .form-group {
@@ -32,68 +40,77 @@
       width: 100%;
     }
 
+    /* Typografi Label */
     label {
-      font-size: 1rem;
+      font-size: 0.9rem;
       margin-bottom: 8px;
-      color: #111111;
-      font-weight: 500;
+      color: #1e293b;
+      font-weight: 600;
       text-align: center;
+      letter-spacing: 0.5px;
     }
 
+    /* Style Input Umum */
     input {
       width: 100%;
       padding: 14px;
-      background-color: #f5f5f5; 
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      color: #333333;
+      background-color: #ffffff;
+      border: 1.5px solid #cbd5e1; /* Border abu-abu tegas */
+      border-radius: 10px;
+      color: #0f172a;
       font-size: 1rem;
+      font-weight: 500;
       text-align: center;
       box-sizing: border-box;
       outline: none;
-      transition: border-color 0.2s;
+      transition: all 0.3s ease;
     }
 
     input::placeholder {
-      color: #a0a0a0;
+      color: #94a3b8;
+      font-weight: 400;
     }
 
+    /* Efek Glow Biru saat kolom diklik/diisi */
     input:focus {
-      border-color: #999999;
-      background-color: #ffffff;
+      border-color: #3b82f6; 
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); 
     }
 
+    /* Baris khusus untuk Barcode & Kamera */
     .barcode-group {
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 15px;
+      gap: 12px;
       width: 100%;
     }
 
     .barcode-group input {
-      border-radius: 20px;
       flex: 1;
+      font-size: 1.1rem; /* Barcode sedikit lebih besar hurufnya */
+      letter-spacing: 1px;
     }
 
     .camera-btn {
       background: none;
       border: none;
-      font-size: 1.8rem;
+      font-size: 2rem;
       cursor: pointer;
-      color: #555555;
+      color: #64748b;
       padding: 0;
       display: flex;
       align-items: center;
-      transition: transform 0.2s;
+      transition: transform 0.2s, color 0.2s;
     }
 
     .camera-btn:hover {
       transform: scale(1.1);
-      color: #000000;
+      color: #3b82f6;
     }
 
+    /* Baris khusus Tanggal & QTY agar sejajar */
     .row-2 {
       display: flex;
       gap: 15px;
@@ -104,47 +121,67 @@
       flex: 1;
     }
 
+    /* Input khusus yang readonly (Otomatis & Tidak bisa diedit) */
     .readonly-input {
-      background-color: #ebebeb;
-      color: #666666;
+      background-color: #f8fafc;
+      border-color: #e2e8f0;
+      color: #64748b;
       cursor: not-allowed;
     }
+    
+    .readonly-input:focus {
+      border-color: #e2e8f0;
+      box-shadow: none;
+    }
 
-    /* Gaya Tombol Umum */
+    /* Style Tombol Aksi */
     button.action-btn {
       width: 100%;
-      padding: 14px;
-      background-color: #9e9e9e; 
+      padding: 15px;
+      background-color: #10b981; /* Warna Hijau Elegan untuk Simpan */
       border: none;
       color: #ffffff;
       font-size: 1.1rem;
-      font-weight: bold;
+      font-weight: 700;
+      letter-spacing: 0.5px;
       cursor: pointer;
-      border-radius: 8px;
-      transition: background-color 0.2s, opacity 0.2s;
+      border-radius: 10px;
+      transition: all 0.2s ease;
       margin-top: 5px;
+      box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
     }
 
     button.action-btn:hover {
-      background-color: #888888;
+      background-color: #059669;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 8px rgba(16, 185, 129, 0.3);
     }
 
     button.action-btn:active {
-      opacity: 0.8;
+      transform: translateY(1px);
+      box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
     }
 
     button.action-btn:disabled {
-      background-color: #cccccc;
-      color: #7a7a7a;
+      background-color: #cbd5e1;
+      box-shadow: none;
       cursor: not-allowed;
+      transform: none;
     }
 
-    /* Gaya Khusus Tombol Request Update (Warna Gelap) */
+    /* Style Tombol Request Update */
     button.request-btn {
-      background-color: #333333;
+      background-color: #475569; /* Warna Slate/Abu gelap kebiruan */
+      box-shadow: 0 4px 6px rgba(71, 85, 105, 0.2);
     }
+
     button.request-btn:hover {
-      background-color: #111111;
+      background-color: #334155;
+      box-shadow: 0 6px 8px rgba(71, 85, 105, 0.3);
+    }
+    
+    button.request-btn:active {
+      box-shadow: 0 2px 4px rgba(71, 85, 105, 0.2);
     }
   </style>
 </head>
@@ -163,7 +200,7 @@
 
     <!-- SKU PRODUK -->
     <div class="form-group">
-      <input type="text" id="sku" class="readonly-input" placeholder="SKU PRODUK" readonly>
+      <input type="text" id="sku" class="readonly-input" placeholder="SKU PRODUK HASIL DARI BARCODE" readonly>
     </div>
 
     <!-- TANGGAL EXP & QTY -->
@@ -184,8 +221,8 @@
       <input type="text" id="checkedBy" placeholder="INPUT NAMA">
     </div>
 
-    <!-- BUTTONS (Sekarang numpuk di satu tempat dan bergantian muncul) -->
-    <div style="margin-top: 15px;">
+    <!-- BUTTONS -->
+    <div style="margin-top: 10px;">
       <button class="action-btn" id="btnSimpan" onclick="simpanData()">SIMPAN</button>
       <button class="action-btn request-btn" id="btnRequest" onclick="requestUpdate()" style="display: none;">REQUEST UPDATE DATA</button>
     </div>
@@ -218,7 +255,6 @@
       if (barcodeValue.trim().length > 0) {
         skuInput.value = "Mencari SKU..."; 
         
-        // Reset tampilan tombol ke awal selama proses mencari
         btnSimpan.style.display = "block";
         btnRequest.style.display = "none";
         
@@ -243,12 +279,10 @@
         
         if (result.status === "success") {
           skuInput.value = result.sku;
-          // SKU Ketemu: Munculkan SIMPAN, Sembunyikan REQUEST
           btnSimpan.style.display = "block";
           btnRequest.style.display = "none";
         } else if (result.status === "not_found") {
           skuInput.value = result.sku; 
-          // SKU Gak Ketemu: Sembunyikan SIMPAN, Munculkan REQUEST
           btnSimpan.style.display = "none";
           btnRequest.style.display = "block";
         } else {
@@ -320,24 +354,21 @@
       }
     }
 
-    // Fungsi Request Update yang baru
     async function requestUpdate() {
       const barcode = document.getElementById('barcode').value;
       const expDate = document.getElementById('expDate').value;
       const qty = document.getElementById('qty').value;
       const checkedBy = document.getElementById('checkedBy').value;
 
-      // Tetap validasi data lain agar tidak kosong
       if(!barcode || !qty || !checkedBy || !expDate) {
         alert("Barcode, Tanggal Exp, QTY, dan Checked By tetap wajib diisi untuk Request!");
         return;
       }
 
       const btn = document.getElementById('btnRequest');
-      btn.innerText = "MENGIRIM REQUEST...";
+      btn.innerText = "MENGIRIM...";
       btn.disabled = true;
 
-      // Payload disiapkan, perhatikan bagian SKU sengaja dikirim string kosong ""
       const payload = {
         barcode: barcode,
         sku: "", 
@@ -359,14 +390,12 @@
         
         if(result.status === "success") {
           alert("Berhasil! Data masuk ke Sheet dan menunggu update SKU dari Admin.");
-          // Bersihkan form
           document.getElementById('barcode').value = '';
           document.getElementById('sku').value = '';
           document.getElementById('expDate').value = '';
           document.getElementById('qty').value = '';
           document.getElementById('barcode').focus();
           
-          // Kembalikan tampilan ke tombol Simpan
           document.getElementById('btnSimpan').style.display = "block";
           btn.style.display = "none";
         } else {
