@@ -24,7 +24,7 @@ function openCamera() {
     html5QrcodeScanner = new Html5QrcodeScanner(
       "qr-reader", 
       { 
-        fps: 10, 
+        fps: 20, 
         qrbox: {width: 250, height: 150}, // Ukuran kotak scan
         supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA] 
       }, 
