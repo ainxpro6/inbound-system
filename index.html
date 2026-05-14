@@ -2,100 +2,157 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Inbound Scanner</title>
+  
+  <script src="https://cdn.jsdelivr.net/npm/rolldate@3.1.3/rolldate.min.js"></script>
+
   <style>
+    /* Mengatur Tema Gelap (Dark Theme) */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #fcfcfc;
+      background-color: #1e1e20; /* Warna background gelap */
+      color: #ffffff;
       display: flex;
       justify-content: center;
-      padding: 20px;
+      padding: 30px 20px;
       margin: 0;
     }
+
     .container {
       width: 100%;
-      max-width: 450px;
+      max-width: 400px;
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
+
     .form-group {
       display: flex;
       flex-direction: column;
       align-items: center;
+      width: 100%;
     }
+
     label {
-      font-size: 1.1rem;
-      margin-bottom: 5px;
-      color: #000;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      color: #ffffff;
+      text-align: center;
     }
+
     input {
       width: 100%;
-      padding: 15px;
-      background-color: #9e9e9e; /* Warna abu-abu sesuai referensi */
+      padding: 14px;
+      background-color: #55585f; /* Warna input abu-abu */
       border: none;
-      border-radius: 4px;
-      color: #fff;
+      border-radius: 8px; /* Sudut membulat */
+      color: #ffffff;
       font-size: 1rem;
       text-align: center;
       box-sizing: border-box;
+      outline: none;
     }
+
     input::placeholder {
-      color: #e0e0e0;
+      color: #b0b0b0;
     }
+
     input:focus {
-      outline: 2px solid #666;
+      outline: 2px solid #888a8f;
     }
+
+    /* Baris khusus untuk Barcode & Kamera */
+    .barcode-group {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      width: 100%;
+    }
+
+    .barcode-group input {
+      border-radius: 20px; /* Lebih membulat khusus barcode */
+      flex: 1;
+    }
+
+    .camera-btn {
+      background: none;
+      border: none;
+      font-size: 1.8rem; /* Ukuran icon diperbesar */
+      cursor: pointer;
+      color: #a0a0a5;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      transition: transform 0.2s;
+    }
+
+    .camera-btn:hover {
+      transform: scale(1.1);
+      color: #ffffff;
+    }
+
+    /* Baris khusus Tanggal & QTY agar sejajar */
     .row-2 {
       display: flex;
       gap: 15px;
       width: 100%;
     }
+
     .row-2 .form-group {
       flex: 1;
     }
-    .barcode-group {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-    }
-    .barcode-group input {
-      border-radius: 20px; /* Sesuai gambar, input barcode lebih membulat */
-    }
-    .camera-btn {
-      background: none;
-      border: none;
-      font-size: 1.1rem;
+
+    /* Input khusus yang readonly (SKU & Date Picker) */
+    .readonly-input {
+      background-color: #55585f;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      color: #000;
-      white-space: nowrap;
     }
-    .camera-btn:hover {
-      text-decoration: underline;
-    }
+
+    /* Tombol Aksi */
     button.action-btn {
       width: 100%;
-      padding: 15px;
-      background-color: #9e9e9e;
+      padding: 14px;
+      background-color: #55585f;
       border: none;
-      color: #000;
+      color: #ffffff;
       font-size: 1.1rem;
       cursor: pointer;
-      border-radius: 4px;
-      transition: background-color 0.2s;
+      border-radius: 8px;
+      transition: background-color 0.2s, opacity 0.2s;
+      margin-top: 5px;
     }
+
     button.action-btn:hover {
-      background-color: #888;
+      background-color: #6a6d75;
     }
+
+    button.action-btn:active {
+      opacity: 0.8;
+    }
+
     button.action-btn:disabled {
-      background-color: #ccc;
+      background-color: #3b3d42;
+      color: #7a7a7a;
       cursor: not-allowed;
+    }
+    
+    /* Icon kalender kecil di dalam input tanggal */
+    .date-wrapper {
+      position: relative;
+      width: 100%;
+    }
+    .date-wrapper::after {
+      content: '📅';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      pointer-events: none;
+      opacity: 0.7;
     }
   </style>
 </head>
@@ -107,20 +164,20 @@
       <label>BARCODE</label>
       <div class="barcode-group">
         <input type="text" id="barcode" placeholder="" oninput="lookupSKU(this.value)">
-        <button class="camera-btn" onclick="openCamera()">
-          📷 logo camera
-        </button>
+        <button class="camera-btn" onclick="openCamera()" title="Buka Kamera">📷</button>
       </div>
     </div>
 
     <div class="form-group">
-      <input type="text" id="sku" placeholder="SKU PRODUK HASIL DARI BARCODE" readonly style="background-color: #8e8e8e;">
+      <input type="text" id="sku" class="readonly-input" placeholder="SKU PRODUK HASIL DARI BARCODE" readonly>
     </div>
 
     <div class="row-2">
       <div class="form-group">
         <label>TANGGAL EXP</label>
-        <input type="date" id="expDate">
+        <div class="date-wrapper">
+          <input type="text" id="expDate" class="readonly-input" placeholder="dd/mm/yyyy" readonly>
+        </div>
       </div>
       <div class="form-group">
         <label>QTY</label>
@@ -133,11 +190,11 @@
       <input type="text" id="checkedBy" placeholder="INPUT NAMA">
     </div>
 
-    <div style="margin-top: 10px;">
+    <div style="margin-top: 15px;">
       <button class="action-btn" id="btnSimpan" onclick="simpanData()">SIMPAN</button>
     </div>
     
-    <div style="margin-top: 20px;">
+    <div style="margin-top: 10px;">
       <button class="action-btn" onclick="requestUpdate()">REQUEST UPDATE DATA</button>
     </div>
 
@@ -145,32 +202,46 @@
 
   <script>
     // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT DI SINI
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFnAt_k_cKbY0lHxyDAHnxxLHdpzCGDDTmz99BLhOa3y3B7do9XOHflh3qPjbo9z2mRQ/exec';
+    const SCRIPT_URL = 'URL_GAS_ANDA_DISINI';
 
-    // Ambil data "Checked By" dari Local Storage jika ada (mencegah ketik ulang saat refresh)
+    // 1. Inisialisasi Rolldate (Scroll Wheel Date Picker)
     window.onload = function() {
+      new Rolldate({
+        el: '#expDate',
+        format: 'DD/MM/YYYY',
+        beginYear: 2020,
+        endYear: 2035,
+        lang: {
+          title: 'Pilih Tanggal Expired',
+          cancel: 'Batal',
+          confirm: 'Pilih',
+          year: '',
+          month: '',
+          day: ''
+        }
+      });
+
+      // 2. Ambil data "Checked By" dari Local Storage jika ada
       const savedName = localStorage.getItem('inbound_checker_name');
       if(savedName) document.getElementById('checkedBy').value = savedName;
     }
 
-    // Fungsi dummy untuk pencarian SKU (Bisa dikembangkan dengan fetch doGet ke GAS)
+    // Fungsi dummy pencarian SKU
     function lookupSKU(barcode) {
       const skuInput = document.getElementById('sku');
       if(barcode.length > 5) {
-        // Logika mapping SKU. Untuk saat ini hanya dummy teks.
         skuInput.value = "SKU-" + barcode.toUpperCase();
       } else {
         skuInput.value = "";
       }
     }
 
-    // Placeholder untuk integrasi library scanner (misal: html5-qrcode)
+    // Placeholder untuk kamera
     function openCamera() {
-      alert("Integrasi kamera dapat menggunakan library html5-qrcode.");
-      // Di sini Anda bisa trigger modal yang berisi div reader kamera
+      alert("Integrasi kamera siap ditambahkan.");
     }
 
-    // Fungsi Submit Data ke GAS
+    // Fungsi Submit Data
     async function simpanData() {
       const barcode = document.getElementById('barcode').value;
       const sku = document.getElementById('sku').value;
@@ -178,12 +249,11 @@
       const qty = document.getElementById('qty').value;
       const checkedBy = document.getElementById('checkedBy').value;
 
-      if(!barcode || !qty || !checkedBy) {
-        alert("Barcode, QTY, dan Checked By wajib diisi!");
+      if(!barcode || !qty || !checkedBy || !expDate) {
+        alert("Barcode, Tanggal Exp, QTY, dan Checked By wajib diisi!");
         return;
       }
 
-      // Simpan nama checker ke Local Storage
       localStorage.setItem('inbound_checker_name', checkedBy);
 
       const payload = {
@@ -199,7 +269,6 @@
       btn.disabled = true;
 
       try {
-        // Menggunakan text/plain untuk menghindari CORS preflight request pada GitHub Pages
         const response = await fetch(SCRIPT_URL, {
           method: 'POST',
           headers: {
@@ -211,17 +280,17 @@
         const result = await response.json();
         
         if(result.status === "success") {
-          // Reset form setelah sukses (kecuali nama checker)
+          // Reset form (kecuali checkedBy yang nempel di local storage)
           document.getElementById('barcode').value = '';
           document.getElementById('sku').value = '';
           document.getElementById('expDate').value = '';
           document.getElementById('qty').value = '';
-          document.getElementById('barcode').focus(); // Otomatis fokus ke barcode lagi
+          document.getElementById('barcode').focus(); 
         } else {
           alert("Gagal menyimpan data: " + result.message);
         }
       } catch (error) {
-        alert("Terjadi kesalahan koneksi.");
+        alert("Terjadi kesalahan koneksi saat mengirim data.");
         console.error(error);
       } finally {
         btn.innerText = "SIMPAN";
@@ -230,8 +299,7 @@
     }
 
     function requestUpdate() {
-      // Logika untuk sinkronisasi / update database SKU offline
-      alert("Tombol Request Update diklik.");
+      alert("Proses sinkronisasi data ditarik ke GitHub Pages...");
     }
   </script>
 </body>
