@@ -221,3 +221,55 @@ select.styled-select:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
 }
+
+/* --- Style Modal Kamera --- */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.85); /* Latar belakang gelap transparan */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Pastikan selalu di depan */
+  backdrop-filter: blur(3px);
+}
+
+.modal-content {
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.close-btn {
+  width: 100%;
+  padding: 12px;
+  background: #ef4444; /* Warna merah */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.close-btn:hover {
+  background: #dc2626;
+}
+
+/* Memperbaiki tampilan border scanner bawaan library */
+#qr-reader {
+  border: none !important;
+  border-radius: 8px;
+  overflow: hidden;
+}
+#qr-reader img {
+  display: none !important; /* Sembunyikan logo html5-qrcode */
+}
+#qr-reader__dashboard_section_csr span {
+  color: #ef4444; /* Warna tombol stop scan */
+}
