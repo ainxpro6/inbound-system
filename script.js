@@ -1,7 +1,7 @@
 // script.js - Logika Inbound Scanner
 
 // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT DI SINI
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFnAt_k_cKbY0lHxyDAHnxxLHdpzCGDDTmz99BLhOa3y3B7do9XOHflh3qPjbo9z2mRQ/execI'';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFnAt_k_cKbY0lHxyDAHnxxLHdpzCGDDTmz99BLhOa3y3B7do9XOHflh3qPjbo9z2mRQ/exec';
 
 window.onload = function() {
   const savedName = localStorage.getItem('inbound_checker_name');
