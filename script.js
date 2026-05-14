@@ -11,8 +11,60 @@ window.onload = function() {
   if(savedCabang) document.getElementById('cabang').value = savedCabang;
 }
 
+// VARIABEL KAMERA
+let html5QrcodeScanner;
+
+// BUKA KAMERA
 function openCamera() {
-  alert("Integrasi kamera siap ditambahkan.");
+  // Tampilkan kotak modal
+  document.getElementById('camera-modal').style.display = 'flex';
+  
+  // Jika scanner belum dibuat, inisialisasi sekarang
+  if (!html5QrcodeScanner) {
+    html5QrcodeScanner = new Html5QrcodeScanner(
+      "qr-reader", 
+      { 
+        fps: 10, 
+        qrbox: {width: 250, height: 150}, // Ukuran kotak scan
+        supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA] 
+      }, 
+      false
+    );
+  }
+  
+  // Jalankan kamera
+  html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+}
+
+// TUTUP KAMERA
+function closeCamera() {
+  document.getElementById('camera-modal').style.display = 'none';
+  
+  // Hentikan kamera agar tidak makan baterai di background
+  if (html5QrcodeScanner) {
+    html5QrcodeScanner.clear().catch(error => {
+      console.error("Gagal menutup kamera: ", error);
+    });
+  }
+}
+
+// JIKA BARCODE BERHASIL TERBACA
+function onScanSuccess(decodedText, decodedResult) {
+  // 1. Tutup kamera otomatis
+  closeCamera();
+  
+  // 2. Masukkan hasil teks barcode ke input form
+  const barcodeInput = document.getElementById('barcode');
+  barcodeInput.value = decodedText;
+  
+  // 3. Panggil fungsi pencarian SKU (seakan-akan kita mengetik)
+  lookupSKU(decodedText);
+}
+
+// JIKA KAMERA SEDANG MENCARI (Abaikan saja errornya)
+function onScanFailure(error) {
+  // Fungsi ini dipanggil berkali-kali per detik jika belum menemukan barcode
+  // Sengaja dikosongkan agar console tidak penuh dengan error
 }
 
 let typingTimer;
