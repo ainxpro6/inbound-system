@@ -6,7 +6,11 @@
   <title>Inbound Scanner</title>
   
   <link rel="stylesheet" href="style.css">
-  <!-- Library Kamera -->
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3b82f6">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  
   <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
@@ -80,5 +84,18 @@
   </div>
 
   <script src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then(registration => {
+            console.log('PWA ServiceWorker sukses terdaftar:', registration.scope);
+          })
+          .catch(err => {
+            console.log('PWA ServiceWorker gagal:', err);
+          });
+      });
+    }
+  </script>
 </body>
 </html>
