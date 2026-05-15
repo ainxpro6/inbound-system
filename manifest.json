@@ -1,5 +1,5 @@
 {
-  "name": "Inbound Scanner Logistik",
+  "name": "Inbound OSM",
   "short_name": "Inbound",
   "start_url": "./index.html",
   "display": "standalone",
