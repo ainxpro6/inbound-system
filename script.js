@@ -203,6 +203,8 @@ async function simpanData() {
     
     if(result.status === "success") {
       playSound('success'); // Beep sukses simpan
+      updateHistory(document.getElementById('sku').value, document.getElementById('qty').value);
+      
       document.getElementById('barcode').value = '';
       document.getElementById('sku').value = '';
       document.getElementById('expDate').value = '';
@@ -271,5 +273,30 @@ async function requestUpdate() {
   } finally {
     btn.innerText = "REQUEST UPDATE DATA";
     btn.disabled = false;
+  }
+}
+
+// --- FUNGSI UPDATE RIWAYAT SCAN ---
+function updateHistory(sku, qty) {
+  const historyList = document.getElementById('scanHistoryList');
+  
+  // Hapus tulisan "Belum ada barang..." jika ada
+  const emptyMsg = historyList.querySelector('.empty-history');
+  if (emptyMsg) {
+    emptyMsg.remove();
+  }
+
+  // Buat kotak list baru
+  const li = document.createElement('li');
+  // Potong nama SKU kalau kepanjangan biar UI nggak rusak
+  const displaySku = sku.length > 20 ? sku.substring(0, 20) + "..." : sku;
+  li.innerHTML = `<span>${displaySku}</span> <span>Qty: ${qty}</span>`;
+  
+  // Masukkan data terbaru ke posisi paling atas
+  historyList.insertBefore(li, historyList.firstChild);
+
+  // Kalau jumlah riwayat lebih dari 5, hapus yang paling bawah (paling lama)
+  if (historyList.children.length > 5) {
+    historyList.removeChild(historyList.lastChild);
   }
 }
