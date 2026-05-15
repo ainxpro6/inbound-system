@@ -51,7 +51,7 @@ async function syncMasterData() {
     if (result.status === "success") {
       // Simpan seluruh data kamus ke memori browser
       localStorage.setItem('master_sku_db', JSON.stringify(result.data));
-      skuInput.placeholder = "Database siap. Mulai Scan!";
+      skuInput.placeholder = "Mulai Scan!";
     }
   } catch (error) {
     console.error("Gagal sinkronisasi data master:", error);
