@@ -3,6 +3,38 @@
 // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT DI SINI
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFnAt_k_cKbY0lHxyDAHnxxLHdpzCGDDTmz99BLhOa3y3B7do9XOHflh3qPjbo9z2mRQ/exec';
 
+// --- MESIN SUARA (AUDIO FEEDBACK) ---
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();
+
+function playSound(type) {
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+
+  const oscillator = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+
+  if (type === 'success') {
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(1200, audioCtx.currentTime); 
+    gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1); 
+    oscillator.start(audioCtx.currentTime);
+    oscillator.stop(audioCtx.currentTime + 0.1);
+  } else if (type === 'error') {
+    oscillator.type = 'sawtooth';
+    oscillator.frequency.setValueAtTime(150, audioCtx.currentTime); 
+    gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4); 
+    oscillator.start(audioCtx.currentTime);
+    oscillator.stop(audioCtx.currentTime + 0.4);
+  }
+}
+
 window.onload = function() {
   const savedName = localStorage.getItem('inbound_checker_name');
   if(savedName) document.getElementById('checkedBy').value = savedName;
@@ -119,16 +151,20 @@ async function fetchSKUFromGAS(barcode) {
     
     if (result.status === "success") {
       skuInput.value = result.sku;
-      skuInput.classList.add('sku-found'); // Tambah highlight biru
-      
+      skuInput.classList.add('sku-found');
       btnSimpan.style.display = "block";
       btnRequest.style.display = "none";
+      
+      playSound('success');
+      
     } else if (result.status === "not_found") {
       skuInput.value = result.sku; 
-      skuInput.classList.add('sku-not-found'); // Tambah highlight merah
-      
+      skuInput.classList.add('sku-not-found'); 
       btnSimpan.style.display = "none";
       btnRequest.style.display = "block";
+
+      playSound('error');
+      
     } else {
       skuInput.value = "Error sistem";
       skuInput.classList.add('sku-not-found');
@@ -149,11 +185,13 @@ async function simpanData() {
   const checkedBy = document.getElementById('checkedBy').value;
 
   if(!barcode || !qty || !checkedBy || !expDate) {
+    playSound('error'); 
     alert("Barcode, Tanggal Exp, QTY, dan Checked By wajib diisi!");
     return;
   }
   
   if(sku === "Mencari SKU..." || sku === "SKU TIDAK DITEMUKAN" || sku === "Gagal terhubung ke server" || sku === "") {
+    playSound('error');
     alert("Pastikan Barcode valid dan SKU telah ditemukan sebelum menyimpan!");
     return;
   }
@@ -184,6 +222,9 @@ async function simpanData() {
     });
 
     const result = await response.json();
+      if(result.status === "success") {
+        
+        playSound('success');
     
     if(result.status === "success") {
       document.getElementById('barcode').value = '';
@@ -192,7 +233,7 @@ async function simpanData() {
       document.getElementById('qty').value = '';
       document.getElementById('barcode').focus(); 
       
-      // Hapus warna highlight setelah data berhasil disimpan
+
       document.getElementById('sku').classList.remove('sku-found', 'sku-not-found');
     } else {
       alert("Gagal menyimpan data: " + result.message);
@@ -214,7 +255,8 @@ async function requestUpdate() {
   const checkedBy = document.getElementById('checkedBy').value;
 
   if(!barcode || !qty || !checkedBy || !expDate) {
-    alert("Barcode, Tanggal Exp, QTY, dan Checked By tetap wajib diisi untuk Request!");
+    playSound('error');
+    alert("Barcode, Tanggal Exp, QTY, dan Checked By wajib diisi!");
     return;
   }
 
@@ -240,6 +282,9 @@ async function requestUpdate() {
     });
 
     const result = await response.json();
+      if(result.status === "success") {
+        
+        playSound('success');
     
     if(result.status === "success") {
       alert("Berhasil! Data masuk ke Sheet dan menunggu update SKU dari Admin.");
