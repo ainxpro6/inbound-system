@@ -273,3 +273,55 @@ select.styled-select:focus {
 #qr-reader__dashboard_section_csr span {
   color: #ef4444; /* Warna tombol stop scan */
 }
+
+/* --- Style Riwayat Scan --- */
+.history-container {
+  margin-top: 10px;
+  border-top: 1px dashed #cbd5e1;
+  padding-top: 15px;
+}
+
+.history-container h4 {
+  margin: 0 0 10px 0;
+  font-size: 0.85rem;
+  color: #64748b;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#scanHistoryList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#scanHistoryList li {
+  background-color: #f8fafc;
+  border-left: 4px solid #10b981; /* Garis hijau di kiri */
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #334155;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+#scanHistoryList li span:first-child {
+  font-weight: 600;
+}
+
+#scanHistoryList li.empty-history {
+  border-left: none;
+  background: none;
+  color: #94a3b8;
+  font-style: italic;
+  justify-content: center;
+  box-shadow: none;
+  font-weight: normal !important;
+}
